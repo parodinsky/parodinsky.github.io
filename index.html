@@ -1,7 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+    <script>
+        // Contador de visitas usando local storage
+        if (localStorage.visitCount) {
+            localStorage.visitCount = Number(localStorage.visitCount) + 1;
+        } else {
+            localStorage.visitCount = 1;
+        }
+
+        // Definir los enlaces de redirección
+        const test1Link = "https://link-a-encuesta-1.com";
+        const test2Link = "https://link-a-encuesta-2.com";
+
+        // Redirigir según el número de visita (par o impar)
+        const userNumber = localStorage.visitCount;
+        window.onload = function() {
+            document.getElementById("userNumber").textContent = userNumber;
+            if (userNumber % 2 === 0) {
+                window.location.href = test1Link;
+            } else {
+                window.location.href = test2Link;
+            }
+        }
+    </script>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+    <div class="container">
+        <h1>Welcome to the Test</h1>
+        <p>You are visitor number: <strong id="userNumber"></strong></p>
+        <p>Please wait while we redirect you to your test...</p>
+    </div>
 </body>
 </html>
