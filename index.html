@@ -5,90 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to the Test</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f8ff;
-            text-align: center;
-        }
-        .container {
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            font-size: 18px;
-            color: #666;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: #ffffff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
+        /* Estilos aquí... */
     </style>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTBDCBF1HB"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-GTBDCBF1HB');
-    </script>
-    <script>
-        // Definir los enlaces de redirección
         const test1Link = "https://tally.so/r/m6Op2Y";
         const test2Link = "https://tally.so/r/wQJOxp";
 
-        let visitCount = 0; // Inicializar el contador de visitas
+        // Función para obtener el contador de visitas y redirigir
+        async function obtenerContadorYRedirigir() {
+            try {
+                // Incrementar el contador en el backend
+                await fetch('/api/contador', { method: 'POST' });
 
-        // Función para aumentar el contador de visitas
-        function incrementVisitCount() {
-            visitCount++;
-            // Mostrar el número de visita en la página
-            document.getElementById("userNumber").textContent = visitCount;
+                // Obtener el contador actualizado
+                const response = await fetch('/api/contador');
+                const data = await response.json();
+                const visitCount = data.value;
+
+                // Mostrar el número de visita en la página
+                document.getElementById("userNumber").textContent = visitCount;
+
+                // Asignar el enlace según la paridad del contador global
+                redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
+
+            } catch (error) {
+                console.error('Error al obtener el contador de visitas:', error);
+                document.getElementById("userNumber").textContent = 'Error al cargar número';
+            }
         }
-
-        // Obtener el número de visitas de la propiedad de Google Analytics
-        function getVisitCount() {
-            // Aquí puedes usar el evento de Google Analytics para contar una visita
-            gtag('event', 'page_view', {
-                'event_category': 'engagement',
-                'event_label': 'Visita a la página',
-                'value': 1
-            });
-            incrementVisitCount(); // Aumentar el contador local
-        }
-
-        // Llamar a la función al cargar la página
-        window.onload = getVisitCount;
 
         // Función para redirigir al usuario cuando hace clic en el botón
         function redirectToTest() {
-            const redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
-            window.location.href = redirectLink;
+            if (redirectLink) {
+                window.location.href = redirectLink;
+            } else {
+                alert('Error al determinar el enlace de redirección.');
+            }
         }
+
+        // Llamar a la función al cargar la página
+        window.onload = obtenerContadorYRedirigir;
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Bienvenido a mi Test Subjetivo!</h1>
-        <p>Sos el numero (Por las dudas acordate si es par o impar): <strong id="userNumber">Cargando...</strong></p>
-        <p>Dale click y arranca el test. Dura entre 10 y 15 min. Requiere tus mejores auriculares y que estés en un lugar tranquilo y silencioso. Estate listo, una vez que arranca lo tenes que terminar, desde ya gracias!:</p>
+        <p>Sos el número (Por las dudas acordate si es par o impar): <strong id="userNumber">Cargando...</strong></p>
+        <p>Dale clic y arranca el test. Dura entre 10 y 15 min. Requiere tus mejores auriculares y que estés en un lugar tranquilo y silencioso. Estate listo, una vez que arranca lo tenes que terminar, desde ya gracias!:</p>
         <button onclick="redirectToTest()">Go to Your Test</button>
     </div>
 </body>
