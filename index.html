@@ -46,26 +46,24 @@
         const test1Link = "https://tally.so/r/m6Op2Y";
         const test2Link = "https://tally.so/r/wQJOxp";
 
-        // URL de la API de contador global
+        // Declarar redirectLink globalmente
+        let redirectLink = '';
+
+        // Obtener el contador global usando XHR
         const counterUrl = 'https://api.countapi.xyz/hit/parodinsky.github.io/contadorporpares';
-
-
-
-        // Obtener el contador global y redirigir según paridad
-        fetch(counterUrl)
-            .then(response => response.json())
-            .then(data => {
-                const visitCount = data.value;
-                // Mostrar el número de visita en la página
-                document.getElementById("userNumber").textContent = visitCount;
-                
-                // Asignar el enlace según la paridad del contador global
-                redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
-            })
-            .catch(error => {
-                console.error('Error al obtener el contador de visitas:', error);
-                document.getElementById("userNumber").textContent = 'Error al cargar número';
-            });
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", counterUrl);
+        xhr.responseType = "json";
+        xhr.onload = function() {
+            const visitCount = this.response.value;
+            document.getElementById("userNumber").textContent = visitCount;
+            redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
+        }
+        xhr.onerror = function() {
+            console.error('Error al obtener el contador de visitas:', error);
+            document.getElementById("userNumber").textContent = 'Error al cargar número';
+        }
+        xhr.send();
 
         // Función para redirigir al usuario cuando hace clic en el botón
         function redirectToTest() {
