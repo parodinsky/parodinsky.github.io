@@ -42,43 +42,36 @@
         }
     </style>
     <script>
-        // Definir los enlaces de redirección
-        const test1Link = "https://tally.so/r/m6Op2Y";
-        const test2Link = "https://tally.so/r/wQJOxp";
+        // Inicializar Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GTBDCBF1HB');
 
-        // Declarar redirectLink globalmente
-        let redirectLink = '';
+        let visitCount = 0;
 
-        // Obtener el contador global usando XHR
-        const counterUrl = 'https://api.countapi.xyz/hit/parodinsky.github.io/contadorporpares';
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", counterUrl);
-        xhr.responseType = "json";
-        xhr.onload = function() {
-            const visitCount = this.response.value;
+        // Función para actualizar el contador de visitas
+        function updateVisitCount() {
+            visitCount++;
             document.getElementById("userNumber").textContent = visitCount;
-            redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
+
+            // Redirigir según paridad
+            const redirectLink = visitCount % 2 === 0 ? "https://tally.so/r/m6Op2Y" : "https://tally.so/r/wQJOxp";
+            return redirectLink;
         }
-        xhr.onerror = function() {
-            console.error('Error al obtener el contador de visitas:', error);
-            document.getElementById("userNumber").textContent = 'Error al cargar número';
-        }
-        xhr.send();
+
+        let redirectLink = updateVisitCount();
 
         // Función para redirigir al usuario cuando hace clic en el botón
         function redirectToTest() {
-            if (redirectLink) {
-                window.location.href = redirectLink;
-            } else {
-                alert('Error al determinar el enlace de redirección.');
-            }
+            window.location.href = redirectLink;
         }
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Bienvenido a mi Test Subjetivo!</h1>
-        <p>Sos el numero (Por las dudas acordate si es par o impar): <strong id="userNumber">Cargando...</strong></p>
+        <p>Sos el número (Por las dudas acordate si es par o impar): <strong id="userNumber">0</strong></p>
         <p>Dale click y arranca el test. Dura entre 10 y 15 min. Requiere tus mejores auriculares y que estés en un lugar tranquilo y silencioso. Estate listo, una vez que arranca lo tenes que terminar, desde ya gracias!:</p>
         <button onclick="redirectToTest()">Go to Your Test</button>
     </div>
