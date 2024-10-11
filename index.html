@@ -42,37 +42,45 @@
         }
     </style>
     <script>
-        // Contador de visitas usando local storage
-        if (localStorage.visitCount) {
-            localStorage.visitCount = Number(localStorage.visitCount) + 1;
-        } else {
-            localStorage.visitCount = 1;
-        }
-
         // Definir los enlaces de redirección
         const test1Link = "https://tally.so/r/m6Op2Y";
         const test2Link = "https://tally.so/r/wQJOxp";
 
-        // Asignar enlace según el número de visita (par o impar)
-        const userNumber = localStorage.visitCount;
-        let redirectLink = userNumber % 2 === 0 ? test1Link : test2Link;
+        // URL de la API de contador global
+        const counterUrl = 'https://api.countapi.xyz/hit/parodinsky';
+
+        // Obtener el contador global y redirigir según paridad
+        fetch(counterUrl)
+            .then(response => response.json())
+            .then(data => {
+                const visitCount = data.value;
+                // Mostrar el número de visita en la página
+                document.getElementById("userNumber").textContent = visitCount;
+                
+                // Asignar el enlace según la paridad del contador global
+                redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
+            })
+            .catch(error => {
+                console.error('Error al obtener el contador de visitas:', error);
+                document.getElementById("userNumber").textContent = 'Error al cargar número';
+            });
 
         // Función para redirigir al usuario cuando hace clic en el botón
         function redirectToTest() {
-            window.location.href = redirectLink;
+            if (redirectLink) {
+                window.location.href = redirectLink;
+            } else {
+                alert('Error al determinar el enlace de redirección.');
+            }
         }
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Bienvenido a mi Test Subjetivo!</h1>
-        <p>Sos el numero (Por las dudas acordate si es par o impar): <strong id="userNumber"></strong></p>
+        <p>Sos el numero (Por las dudas acordate si es par o impar): <strong id="userNumber">Cargando...</strong></p>
         <p>Dale click y arranca el test. Dura entre 10 y 15 min. Requiere tus mejores auriculares y que estés en un lugar tranquilo y silencioso. Estate listo, una vez que arranca lo tenes que terminar, desde ya gracias!:</p>
         <button onclick="redirectToTest()">Go to Your Test</button>
     </div>
-    <script>
-        // Mostrar el número de usuario en la página
-        document.getElementById("userNumber").textContent = userNumber;
-    </script>
 </body>
 </html>
