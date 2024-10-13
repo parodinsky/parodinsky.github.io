@@ -43,24 +43,26 @@
         }
     </style>
     <script>
-        async function cargarContador() {
-            try {
-                const response = await fetch('http://localhost:5000/api/contador');
-                const data = await response.json();
-                document.getElementById('userNumber').textContent = data.count;
+async function cargarContador() {
+    try {
+        const response = await fetch('http://localhost:5000/api/contador'); // Cambia esta URL si necesitas
+        const data = await response.json();
+        console.log('Datos recibidos:', data); // Añade un log para revisar los datos
+        document.getElementById('userNumber').textContent = data.count;
 
-                const link = data.count % 2 === 0 
-                    ? 'https://tally.so/r/m6Op2Y' 
-                    : 'https://tally.so/r/wQJOxp';
+        const link = data.count % 2 === 0 
+            ? 'https://tally.so/r/m6Op2Y' 
+            : 'https://tally.so/r/wQJOxp';
 
-                document.getElementById('testButton').onclick = () => {
-                    window.location.href = link;
-                };
-            } catch (error) {
-                console.error('Error al cargar el contador:', error);
-                document.getElementById('userNumber').textContent = 'Error al cargar número';
-            }
-        }
+        document.getElementById('testButton').onclick = () => {
+            window.location.href = link;
+        };
+    } catch (error) {
+        console.error('Error al cargar el contador:', error); // Añade un log para revisar errores
+        document.getElementById('userNumber').textContent = 'Error al cargar número';
+    }
+}
+
 
         window.onload = cargarContador;
     </script>
