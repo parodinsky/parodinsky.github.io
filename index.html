@@ -3,56 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to the Test</title>
+    <title>Bienvenido al Test Subjetivo</title>
     <style>
-        /* Estilos aquí... */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
     <script>
-        const test1Link = "https://tally.so/r/m6Op2Y";
-        const test2Link = "https://tally.so/r/wQJOxp";
+        const backendUrl = 'https://tu-backend-en-la-nube/api/contador'; // Reemplaza con la URL de tu servidor
 
-        // Función para obtener el contador de visitas y redirigir
-        async function obtenerContadorYRedirigir() {
-            try {
-                // Incrementar el contador en el backend
-                await fetch('/api/contador', { method: 'POST' });
-
-                // Obtener el contador actualizado
-                const response = await fetch('/api/contador');
-                const data = await response.json();
-                const visitCount = data.value;
-
-                // Mostrar el número de visita en la página
+        fetch(backendUrl)
+            .then(response => response.json())
+            .then(data => {
+                const visitCount = data.count;
                 document.getElementById("userNumber").textContent = visitCount;
-
-                // Asignar el enlace según la paridad del contador global
-                redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
-
-            } catch (error) {
+                
+                const test1Link = "https://tally.so/r/m6Op2Y";
+                const test2Link = "https://tally.so/r/wQJOxp";
+                
+                const redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
+                document.getElementById("redirectButton").onclick = () => window.location.href = redirectLink;
+            })
+            .catch(error => {
                 console.error('Error al obtener el contador de visitas:', error);
                 document.getElementById("userNumber").textContent = 'Error al cargar número';
-            }
-        }
-
-        // Función para redirigir al usuario cuando hace clic en el botón
-        function redirectToTest() {
-            if (redirectLink) {
-                window.location.href = redirectLink;
-            } else {
-                alert('Error al determinar el enlace de redirección.');
-            }
-        }
-
-        // Llamar a la función al cargar la página
-        window.onload = obtenerContadorYRedirigir;
+            });
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Bienvenido a mi Test Subjetivo!</h1>
-        <p>Sos el número (Por las dudas acordate si es par o impar): <strong id="userNumber">Cargando...</strong></p>
-        <p>Dale clic y arranca el test. Dura entre 10 y 15 min. Requiere tus mejores auriculares y que estés en un lugar tranquilo y silencioso. Estate listo, una vez que arranca lo tenes que terminar, desde ya gracias!:</p>
-        <button onclick="redirectToTest()">Go to Your Test</button>
+        <p>Tu número de visita es: <strong id="userNumber">Cargando...</strong></p>
+        <p>Presiona el botón para iniciar el test adecuado:</p>
+        <button id="redirectButton">Ir al Test</button>
     </div>
 </body>
 </html>
