@@ -50,6 +50,8 @@ async function cargarContador() {
             mode: 'cors'
         });
 
+        console.log('Contenido de la respuesta:', response);
+
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1) {
             const data = await response.json(); 
@@ -65,13 +67,15 @@ async function cargarContador() {
                 window.location.href = link;
             };
         } else {
-            throw new Error("Respuesta inesperada, no es JSON");
+            const text = await response.text();
+            throw new Error(`Respuesta inesperada: ${text}`);
         }
     } catch (error) {
         console.error('Error al cargar el contador:', error);
         document.getElementById('userNumber').textContent = 'Error al cargar número';
     }
 }
+
 
 
 
