@@ -44,17 +44,19 @@
     </style>
     <script>
 
-fetch('https://17f2-2800-af0-108c-e522-4124-1c6f-80b3-e885.ngrok-free.app/api/contador')
-  .then(response => {
-    if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-    const contentType = response.headers.get("content-type");
-    if (!contentType || !contentType.includes("application/json")) {
-      throw new Error("La respuesta no es JSON");
-    }
-    return response.json();
-  })
-  .then(data => console.log(data))
-  .catch(error => console.error('Error al cargar el contador:', error));
+fetch('https://<tu-subdominio-ngrok>.ngrok-free.app/api/contador')
+    .then(response => {
+        if (!response.headers.get('content-type').includes('application/json')) {
+            throw new Error("La respuesta no es JSON");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Contador:', data);
+    })
+    .catch(error => {
+        console.error('Error al cargar el contador:', error);
+    });
 
 
         
