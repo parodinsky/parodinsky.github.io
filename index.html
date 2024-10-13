@@ -50,26 +50,29 @@ async function cargarContador() {
             mode: 'cors'
         });
 
-        const text = await response.text();
-        console.log('Texto recibido:', text);
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            const data = await response.json(); 
+            console.log('Datos JSON:', data);
 
-        const data = JSON.parse(text); // Intenta convertir el texto a JSON manualmente
-        console.log('Datos JSON:', data);
+            document.getElementById('userNumber').textContent = data.count;
 
-        document.getElementById('userNumber').textContent = data.count;
+            const link = data.count % 2 === 0 
+                ? 'https://tally.so/r/m6Op2Y' 
+                : 'https://tally.so/r/wQJOxp';
 
-        const link = data.count % 2 === 0 
-            ? 'https://tally.so/r/m6Op2Y' 
-            : 'https://tally.so/r/wQJOxp';
-
-        document.getElementById('testButton').onclick = () => {
-            window.location.href = link;
-        };
+            document.getElementById('testButton').onclick = () => {
+                window.location.href = link;
+            };
+        } else {
+            throw new Error("Respuesta inesperada, no es JSON");
+        }
     } catch (error) {
         console.error('Error al cargar el contador:', error);
         document.getElementById('userNumber').textContent = 'Error al cargar número';
     }
 }
+
 
 
 
@@ -81,10 +84,10 @@ async function cargarContador() {
     <div class="container">
         <h1>Bienvenido a mi Test Subjetivo!</h1>
         <p>Sos el número: <strong id="userNumber">Cargando...</strong></p>
-        <p>Estate listo con tus mejores auriculares puestos y en un lugar silencioso.
+        <p>Estate listo con tus mejores auriculares puestos y en un lugar silencioso.</p>
         <p>Dale click para iniciar el test. ¡Gracias por participar!</p>
         <button id="testButton">Ir al Test</button>
-        <p>(Si te tira error al cargar numero, desactiva Adblock o cambiá de navegador)
+        <p>(Si te tira error al cargar numero, desactiva Adblock o cambiá de navegador)</p>
     </div>
 </body>
 </html>
