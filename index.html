@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to the Test</title>
+    <title>Bienvenido al Test</title>
     <style>
+        /* Estilos de la página */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -21,8 +22,13 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
         }
-        h1 { color: #333; }
-        p { font-size: 18px; color: #666; }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+        }
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -32,44 +38,39 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        button:hover { background-color: #45a049; }
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
+    <script>
+        async function cargarContador() {
+            try {
+                const response = await fetch('http://localhost:5000/api/contador');
+                const data = await response.json();
+                document.getElementById('userNumber').textContent = data.count;
+
+                const link = data.count % 2 === 0 
+                    ? 'https://tally.so/r/m6Op2Y' 
+                    : 'https://tally.so/r/wQJOxp';
+
+                document.getElementById('testButton').onclick = () => {
+                    window.location.href = link;
+                };
+            } catch (error) {
+                console.error('Error al cargar el contador:', error);
+                document.getElementById('userNumber').textContent = 'Error al cargar número';
+            }
+        }
+
+        window.onload = cargarContador;
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Bienvenido a mi Test Subjetivo!</h1>
         <p>Sos el número: <strong id="userNumber">Cargando...</strong></p>
-        <p>Dale click y arranca el test:</p>
-        <button onclick="redirectToTest()">Go to Your Test</button>
+        <p>Dale click para iniciar el test. ¡Gracias por participar!</p>
+        <button id="testButton">Ir al Test</button>
     </div>
-
-    <script>
-        const test1Link = "https://tally.so/r/m6Op2Y";
-        const test2Link = "https://tally.so/r/wQJOxp";
-        let redirectLink;
-
-        // Obtener el contador y asignar redirección
-        fetch('http://localhost:5000/api/contador')
-            .then(response => response.json())
-            .then(data => {
-                const visitCount = data.count;
-                document.getElementById("userNumber").textContent = visitCount;
-
-                // Definir el enlace según la paridad
-                redirectLink = visitCount % 2 === 0 ? test1Link : test2Link;
-            })
-            .catch(error => {
-                console.error('Error al obtener el contador de visitas:', error);
-                document.getElementById("userNumber").textContent = 'Error al cargar número';
-            });
-
-        function redirectToTest() {
-            if (redirectLink) {
-                window.location.href = redirectLink;
-            } else {
-                alert('Error al determinar el enlace de redirección.');
-            }
-        }
-    </script>
 </body>
 </html>
